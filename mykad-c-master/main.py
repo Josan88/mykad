@@ -72,7 +72,6 @@ def split(split_offset, split_length):
             # set length
             try:
                 data, sw1, sw2 = connection.transmit(TxBuffer[:10])
-                print(hex(sw1))
             except CardServiceStoppedException as e:
                 print(f"Error sending the SET_LENGTH command: {e}")
 
@@ -85,16 +84,13 @@ def split(split_offset, split_length):
             # select file
             try:
                 data, sw1, sw2 = connection.transmit(TxBuffer[:13])
-                print(hex(sw1))
             except CardServiceStoppedException as e:
                 print(f"Error sending the SELECT_FILE command: {e}")
             ##################
+            
             TxBuffer = CMD_GET_DATA + list(split_length.to_bytes(1, byteorder='little'))
-            print(toHexString(TxBuffer))
-
             try:
                 data, sw1, sw2 = connection.transmit(TxBuffer)
-                print(toASCIIString(data))
             except CardServiceStoppedException as e:
                 print(f"Error sending the GET_DATA command: {e}")
                 
@@ -112,34 +108,26 @@ for FileNum in range(1, len(fileLengths)):
             print(".", end="")
             if split_offset + split_length > fileLengths[FileNum]:
                 split_length = fileLengths[FileNum] - split_offset
-            i = 0
+            # set length
             TxBuffer = bytearray(CMD_SET_LENGTH[:8])
-            TxBuffer += split_length.to_bytes(2, byteorder='big')
-            print(list(TxBuffer))
-            data, sw1, sw2 = connection.transmit(list(TxBuffer))
-################################ here
-            i = 0
-            for j in range(5):
-                TxBuffer[i] = CMD_SELECT_FILE[j]
-                i += 1
-            TxBuffer[i:i+2] = struct.pack("<h", FileNum)
-            i += 2
-            TxBuffer[i:i+2] = struct.pack("<h", 1)
-            i += 2
-            TxBuffer[i:i+2] = struct.pack("<h", split_offset)
-            i += 2
-            TxBuffer[i:i+2] = struct.pack("<h", split_length)
-            i += 2
-            data, sw1, sw2 = connection.transmit(list(TxBuffer))
-
-            i = 0
-            for j in range(4):
-                TxBuffer[i] = CMD_GET_DATA[j]
-                i += 1
-            TxBuffer[i] = split_length & 0xff
-            i += 1
+            TxBuffer += split_length.to_bytes(2, byteorder='little')
             data, sw1, sw2 = connection.transmit(list(TxBuffer))
             
+            # select file
+            one = 1
+            TxBuffer = bytearray(CMD_SELECT_FILE[:5])
+            TxBuffer += FileNum.to_bytes(2, byteorder='little')
+            TxBuffer += one.to_bytes(2, byteorder='little')
+            TxBuffer += split_offset.to_bytes(2, byteorder='little')
+            TxBuffer += split_length.to_bytes(2, byteorder='little')
+            data, sw1, sw2 = connection.transmit(list(TxBuffer))
+            
+            # get data
+            TxBuffer = bytearray(CMD_GET_DATA[:4])
+            TxBuffer += split_length.to_bytes(1, byteorder='little')
+            data, sw1, sw2 = connection.transmit(list(TxBuffer))
+            data = bytes(data)
+            print(data)
             outfile.write(data[0:dLength-2])
             if FileNum == 2:
                 if split_offset == 0:
