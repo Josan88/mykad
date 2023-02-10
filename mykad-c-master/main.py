@@ -18,9 +18,16 @@ HEX = 2
 COMMA = 8
 dLength=256
 
-def trim_string(out, in_, count):
-    out[:] = in_[:count].strip()
-    return out
+def TrimString(out, in_, count):
+    i = count - 1
+    while i >= 0 and in_[i] == 0x20:
+        i -= 1
+    j = 0
+    while j < i + 1:
+        out[j] = in_[j]
+        j += 1
+    out[j] = 0
+    
 def date_string(out, in_):
     out[:] = f"{in_[0:2]}/{in_[2:4]}/{in_[4:8]}"
     return out
@@ -47,7 +54,6 @@ except NoCardException:
 # select JPN application
 try:
     data, sw1, sw2 = connection.transmit(CMD_SELECT_APP_JPN)
-    print(hex(sw1))
 except CardServiceStoppedException as e:
     print(f"Error sending the SELECT_JPN command: {e}")
     
@@ -60,41 +66,10 @@ if sw1 != 0x61:
 CMD_APP_RESPONSE = [0x00, 0xC0, 0x00, 0x00, sw2]
 try:
     data, sw1, sw2 = connection.transmit(CMD_APP_RESPONSE)
-    print(toHexString(data))
 except CardServiceStoppedException as e:
     print(f"Error sending the GET_RESPONSE command: {e}")
 
-def split(split_offset, split_length):
-            TxBuffer = CMD_SET_LENGTH
-            TxBuffer += split_length.to_bytes(2, byteorder='little')
-            TxBuffer = toHexString(TxBuffer)
-            TxBuffer = toBytes(TxBuffer)
-            # set length
-            try:
-                data, sw1, sw2 = connection.transmit(TxBuffer[:10])
-            except CardServiceStoppedException as e:
-                print(f"Error sending the SET_LENGTH command: {e}")
-
-            one = 1
-            TxBuffer = CMD_SELECT_FILE
-            TxBuffer += FileNum.to_bytes(2, byteorder='little')
-            TxBuffer += one.to_bytes(2, byteorder='little')
-            TxBuffer += split_offset.to_bytes(2, byteorder='little')
-            TxBuffer += split_length.to_bytes(2, byteorder='little')
-            # select file
-            try:
-                data, sw1, sw2 = connection.transmit(TxBuffer[:13])
-            except CardServiceStoppedException as e:
-                print(f"Error sending the SELECT_FILE command: {e}")
-            ##################
-            
-            TxBuffer = CMD_GET_DATA + list(split_length.to_bytes(1, byteorder='little'))
-            try:
-                data, sw1, sw2 = connection.transmit(TxBuffer)
-            except CardServiceStoppedException as e:
-                print(f"Error sending the GET_DATA command: {e}")
-                
-################################################################
+# check response
 for FileNum in range(1, len(fileLengths)):
     if fileLengths[FileNum]:
         print("Reading JPN file {}".format(FileNum))
@@ -127,18 +102,15 @@ for FileNum in range(1, len(fileLengths)):
             TxBuffer += split_length.to_bytes(1, byteorder='little')
             data, sw1, sw2 = connection.transmit(list(TxBuffer))
             data = bytes(data)
-            print(data)
-            outfile.write(data[0:dLength-2])
+            outfile.write(data[:dLength-2])
             if FileNum == 2:
                 if split_offset == 0:
                     out2file.write(data[3:dLength-5])
                 else:
-                    out2file.write(data[0:dLength-2])
-                    
-            if FileNum == 1 and split_offset == 0:
-                TxBuffer = trim_string(RxBuffer[0x03:0x03+0x28])
-                print("\nName:           %s" % TxBuffer)
+                    out2file.write(data[:dLength-2])
+        print("\n")
+        outfile.close()
+        if FileNum == 2:
+            out2file.close()
             
-                    
-                    
-        
+            
