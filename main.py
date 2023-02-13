@@ -1,7 +1,5 @@
 from smartcard.scard import *
-from smartcard.pcsc import PCSCExceptions
 from smartcard.util import *
-import struct
 from smartcard.Exceptions import NoCardException, CardRequestTimeoutException, CardConnectionException, CardServiceStoppedException
 from smartcard.System import readers
 
@@ -17,6 +15,8 @@ TxBuffer = bytearray(64)
 HEX = 2
 COMMA = 8
 dLength=256
+txt = open("mykad.txt", "w+")
+
 
 def DateString(out, in_):
     out[0:2] = "{:02x}".format(in_[0])
@@ -27,7 +27,8 @@ def DateString(out, in_):
     return out
 
 def PostcodeString(in_):
-    print("{:02x}{:02x}{:01x}".format(*in_))
+    postcode = ("{:02x}{:02x}{:01x}".format(*in_))
+    return(postcode)
 
     
 try:
@@ -121,13 +122,23 @@ for FileNum in range(1, len(fileLengths)):
                 print("Religion:", toASCIIString(list(RxBuffer)[371-252:371-252+11]))
                 
             elif FileNum == 4 and split_offset == 0:
-                print("\nAddress:\n", toASCIIString(list(RxBuffer)[3:3+30]))
-                print(toASCIIString(list(RxBuffer)[33:33+30]))
-                print(toASCIIString(list(RxBuffer)[63:63+30]))
-                PostcodeString(list(RxBuffer)[93:93+3])
-                print(toASCIIString(list(RxBuffer)[96:96+25]))
-                print(toASCIIString(list(RxBuffer)[121:121+30]))
-                print(toASCIIString(list(RxBuffer)[151:151+30]))
+                postcode = PostcodeString(list(RxBuffer)[93:93+3])
+                txt.write("\nAddress:\n", toASCIIString(list(RxBuffer)[3:3+30])
+                          , "\n", toASCIIString(list(RxBuffer)[33:33+30])
+                          , "\n", toASCIIString(list(RxBuffer)[63:63+30])
+                          , "\n", postcode
+                          , "\n", toASCIIString(list(RxBuffer)[96:96+25])
+                          , "\n", toASCIIString(list(RxBuffer)[121:121+30])
+                          , "\n", toASCIIString(list(RxBuffer)[151:151+30])
+                )
+                
+                # print("\nAddress:\n", toASCIIString(list(RxBuffer)[3:3+30]))
+                # print(toASCIIString(list(RxBuffer)[33:33+30]))
+                # print(toASCIIString(list(RxBuffer)[63:63+30]))
+                # PostcodeString(list(RxBuffer)[93:93+3])
+                # print(toASCIIString(list(RxBuffer)[96:96+25]))
+                # print(toASCIIString(list(RxBuffer)[121:121+30]))
+                # print(toASCIIString(list(RxBuffer)[151:151+30]))
                 
 
 
