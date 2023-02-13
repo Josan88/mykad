@@ -1,12 +1,10 @@
 <html>
-    <img src="photo.jpg">
-</html>
-
+<img src="photo.jpg">
 <?php
 // read a json file
 $json = file_get_contents('jpn1.json');
 // decode the json
-$json_data = json_decode($json,true);
+$json_data = json_decode($json, true);
 // print the data
 echo "<br>";
 echo $json_data['name'];
@@ -29,7 +27,13 @@ echo $json_data['ethnicrace'];
 echo "<br>";
 echo $json_data['religion'];
 echo "<br>";
+$json = file_get_contents('jpn4.json');
+$json_data = json_decode($json, true);
+echo $json_data['line1'];
+echo "<br>";
 
 
 
 ?>
+
+</html>
