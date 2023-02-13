@@ -36,7 +36,7 @@ echo $json_data['line2'];
 echo "<br>";
 echo $json_data['line3'];
 echo "<br>";
-echo $json_data['line4'];
+echo $json_data['postcode'];
 echo "<br>";
 echo $json_data['line5'];
 echo "<br>";
