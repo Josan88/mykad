@@ -184,16 +184,18 @@ class transmitobserver(CardObserver):
                 self.cards.remove(card)
             
 if __name__ == '__main__':
-    print("Insert or remove a SIM card in the system.")
-    print("This program will exit in 5 minutes")
-    print("")
-    cardmonitor = CardMonitor()
-    cardobserver = transmitobserver()
-    cardmonitor.addObserver(cardobserver)
-
-
-    sleep(300)
-
-    # don't forget to remove observer, or the
-    # monitor will poll forever...
-    cardmonitor.deleteObserver(cardobserver)
+    try:
+        print("Insert or remove a SIM card in the system.")
+        print("This program will exit in 5 minutes")
+        print("")
+        cardmonitor = CardMonitor()
+        cardobserver = transmitobserver()
+        cardmonitor.addObserver(cardobserver)
+        sleep(300)
+        cardmonitor.deleteObserver(cardobserver)
+    except KeyboardInterrupt:
+        print("Exiting")
+        exit()
+    except Exception as e:
+        print("Error: ", e)
+        exit()
