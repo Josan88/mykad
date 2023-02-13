@@ -162,11 +162,7 @@ class transmitobserver(CardObserver):
                             json_object = json.dumps(jpn4_dict, indent=4)
                             jpn4.write(json_object)
                             jpn4.close()
-                            
-
-
-                        
-                        
+                                 
                     print("\nDone reading\n")
                     # outfile.close()
                     if FileNum == 2:
