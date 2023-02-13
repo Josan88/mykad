@@ -150,13 +150,14 @@ class transmitobserver(CardObserver):
                         elif FileNum == 4 and split_offset == 0:
                             jpn4 = open("jpn4.json", "w+")
                             postcode = PostcodeString(list(RxBuffer)[93:93+3])
-                            jpn4_dict = {"line1": toASCIIString(list(RxBuffer)[3:3+30]),
-                                        "line2": toASCIIString(list(RxBuffer)[33:33+30]),
-                                        "line3": toASCIIString(list(RxBuffer)[63:63+30]),
-                                        "postcode": postcode,
-                                        "line5": toASCIIString(list(RxBuffer)[96:96+25]),
-                                        "line6": toASCIIString(list(RxBuffer)[121:121+30]), 
-                                        "line7": toASCIIString(list(RxBuffer)[151:151+30])
+                            jpn4_dict = {
+                                "line1": toASCIIString(list(RxBuffer)[3:3+30]),
+                                "line2": toASCIIString(list(RxBuffer)[33:33+30]),
+                                "line3": toASCIIString(list(RxBuffer)[63:63+30]),
+                                "postcode": postcode,
+                                "line5": toASCIIString(list(RxBuffer)[96:96+25]),
+                                "line6": toASCIIString(list(RxBuffer)[121:121+30]), 
+                                "line7": toASCIIString(list(RxBuffer)[151:151+30])
                                         }
                             json_object = json.dumps(jpn4_dict, indent=4)
                             jpn4.write(json_object)
