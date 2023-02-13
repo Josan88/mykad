@@ -139,13 +139,14 @@ class transmitobserver(CardObserver):
                             jpn3 = open("jpn3", "wb+")
                             jpn3.write(RxBuffer)
                             jpn3.close()
+                            #############
                             RxBuffer = bytes(RxBuffer)
                             rightThumbData = (RxBuffer[23:23+598])
                             print(rightThumbData)
                             rightThumb = open("rightThumb.bmp", "wb+")
                             rightThumb.write(rightThumbData)
                             rightThumb.close()
-                            
+                            #############
                             
                         elif FileNum == 4 and split_offset == 0:
                             jpn4 = open("jpn4.json", "w+")
