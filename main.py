@@ -87,8 +87,11 @@ class transmitobserver(CardObserver):
                         # set length
                         TxBuffer = bytearray(CMD_SET_LENGTH[:8])
                         TxBuffer += split_length.to_bytes(2, byteorder='little')
-                        RxBuffer, sw1, sw2 = card.connection.transmit(list(TxBuffer))
-                        
+                        try:
+                            RxBuffer, sw1, sw2 = card.connection.transmit(list(TxBuffer))
+                        except CardServiceStoppedException as e:
+                            print(f"Error sending the SET_LENGTH command: {e}")
+                            
                         # select file
                         one = 1
                         TxBuffer = bytearray(CMD_SELECT_FILE[:5])
@@ -96,12 +99,18 @@ class transmitobserver(CardObserver):
                         TxBuffer += one.to_bytes(2, byteorder='little')
                         TxBuffer += split_offset.to_bytes(2, byteorder='little')
                         TxBuffer += split_length.to_bytes(2, byteorder='little')
-                        RxBuffer, sw1, sw2 = card.connection.transmit(list(TxBuffer))
-                        
+                        try:
+                            RxBuffer, sw1, sw2 = card.connection.transmit(list(TxBuffer))
+                        except CardServiceStoppedException as e:
+                            print(f"Error sending the SELECT_FILE command: {e}")
+                            
                         # get RxBuffer
                         TxBuffer = bytearray(CMD_GET_DATA[:4])
                         TxBuffer += split_length.to_bytes(1, byteorder='little')
-                        RxBuffer, sw1, sw2 = card.connection.transmit(list(TxBuffer))
+                        try:
+                            RxBuffer, sw1, sw2 = card.connection.transmit(list(TxBuffer))
+                        except CardServiceStoppedException as e:
+                            print(f"Error sending the GET_DATA command: {e}")
                         RxBuffer = bytes(RxBuffer)
                         # outfile.write(RxBuffer[:dLength-2])
                         if FileNum == 2:
@@ -139,14 +148,14 @@ class transmitobserver(CardObserver):
                             jpn3 = open("jpn3", "wb+")
                             jpn3.write(RxBuffer)
                             jpn3.close()
-                            #############
+                            ##############################
                             RxBuffer = bytes(RxBuffer)
                             rightThumbData = (RxBuffer[23:23+598])
                             print(rightThumbData)
                             rightThumb = open("rightThumb.bmp", "wb+")
                             rightThumb.write(rightThumbData)
                             rightThumb.close()
-                            #############
+                            ##############################
                             
                         elif FileNum == 4 and split_offset == 0:
                             jpn4 = open("jpn4.json", "w+")
