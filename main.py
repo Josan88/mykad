@@ -1,9 +1,7 @@
 from smartcard.scard import *
 from smartcard.util import *
 from smartcard.Exceptions import NoCardException, CardConnectionException, CardServiceStoppedException
-from smartcard.System import readers
 import json
-from smartcard.CardConnectionObserver import ConsoleCardConnectionObserver
 from smartcard.CardMonitoring import CardMonitor, CardObserver
 from time import sleep
 
