@@ -1,5 +1,6 @@
 <html>
 <img src="photo.jpg">
+<br><br>
 <?php
 // read a json file
 $json = file_get_contents('jpn1.json');
@@ -31,6 +32,18 @@ $json = file_get_contents('jpn4.json');
 $json_data = json_decode($json, true);
 echo $json_data['line1'];
 echo "<br>";
+echo $json_data['line2'];
+echo "<br>";
+echo $json_data['line3'];
+echo "<br>";
+echo $json_data['line4'];
+echo "<br>";
+echo $json_data['line5'];
+echo "<br>";
+echo $json_data['line6'];
+echo "<br>";
+echo $json_data['line7'];
+
 
 
 
