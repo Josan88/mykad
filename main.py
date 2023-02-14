@@ -142,7 +142,7 @@ class transmitobserver(CardObserver):
                             jpn1.close()
                             
                         elif FileNum == 3:
-                            ##############################
+                            # Thumbprint data
                             if split_offset == 0:
                                 jpn3 = open("jpn3", "wb+")
                                 rightThumbData = (RxBuffer[23:23+598])
