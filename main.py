@@ -141,19 +141,16 @@ class transmitobserver(CardObserver):
                             jpn1.write(json_object)
                             jpn1.close()
                             
-                          
-                        elif FileNum == 3 and split_offset == 0:
-                            jpn3 = open("jpn3", "wb+")
-                            jpn3.write(RxBuffer)
-                            jpn3.close()
+                        elif FileNum == 3:
                             ##############################
-                            RxBuffer = bytes(RxBuffer)
-                            rightThumbData = (RxBuffer[23:23+598])
-                            print(rightThumbData)
-                            rightThumb = open("rightThumb.bmp", "wb+")
-                            rightThumb.write(rightThumbData)
-                            rightThumb.close()
-                            ##############################
+                            if split_offset == 0:
+                                jpn3 = open("jpn3", "wb+")
+                                rightThumbData = (RxBuffer[23:23+598])
+                                print(toHexString(list(rightThumbData)))
+                                jpn3.write(rightThumbData)
+                            
+                            
+                            
                             
                         elif FileNum == 4 and split_offset == 0:
                             jpn4 = open("jpn4.json", "w+")
@@ -175,6 +172,8 @@ class transmitobserver(CardObserver):
                     # outfile.close()
                     if FileNum == 2:
                         out2file.close()
+                    elif FileNum == 3:
+                        jpn3.close()
 
         for card in removedcards:
             print("-Removed: ", toHexString(card.atr))
