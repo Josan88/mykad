@@ -5,7 +5,8 @@ import json
 from smartcard.CardMonitoring import CardMonitor, CardObserver
 from time import sleep
 
-CMD_SELECT_APP_JPN = [0x00, 0xA4, 0x04, 0x00, 0x0A, 0xA0, 0x00, 0x00, 0x00, 0x74, 0x4A, 0x50, 0x4E, 0x00, 0x10]
+CMD_SELECT_APP_JPN = [0x00, 0xA4, 0x04, 0x00, 0x0A, 0xA0,
+                      0x00, 0x00, 0x00, 0x74, 0x4A, 0x50, 0x4E, 0x00, 0x10]
 CMD_APP_RESPONSE = [0x00, 0xC0, 0x00, 0x00, 0x05]
 CMD_SET_LENGTH = [0xC8, 0x32, 0x00, 0x00, 0x05, 0x08, 0x00, 0x00]
 CMD_SELECT_FILE = [0xCC, 0x00, 0x00, 0x00, 0x08]
@@ -16,6 +17,8 @@ TxBuffer = bytearray(64)
 dLength = 256
 
 # YYYY-MM-DD format
+
+
 def DateString(out, in_):
     out[0:2] = "{:02x}".format(in_[0])
     out[2:5] = "{:02x}-".format(in_[1])
@@ -23,12 +26,17 @@ def DateString(out, in_):
     out[8:10] = "{:02x}".format(in_[3])
     out[10:] = ''
     return out
+
 # 5 digit postcode format
+
+
 def PostcodeString(in_):
     postcode = ("{:02x}{:02x}{:01x}".format(*in_))
-    return(postcode)
+    return (postcode)
 
 # Observe card insertion and removal
+
+
 class transmitobserver(CardObserver):
 
     def __init__(self):
@@ -43,23 +51,23 @@ class transmitobserver(CardObserver):
                 try:
                     card.connection = card.createConnection()
                     card.connection.connect()
-                    
+
                 except CardConnectionException as e:
                     print(f"Error connecting to the card: {e}")
                 except NoCardException:
-                    
+
                     print("Smart card not connected")
-            
+
             # select JPN application
             try:
-                RxBuffer, sw1, sw2 = card.connection.transmit(CMD_SELECT_APP_JPN)
+                RxBuffer, sw1, sw2 = card.connection.transmit(
+                    CMD_SELECT_APP_JPN)
             except CardServiceStoppedException as e:
                 print(f"Error sending the SELECT_JPN command: {e}")
-                
+
             # check response
             if sw1 != 0x61:
                 print("Not MyKad")
-                
 
             # app response
             CMD_APP_RESPONSE = [0x00, 0xC0, 0x00, 0x00, sw2]
@@ -82,29 +90,37 @@ class transmitobserver(CardObserver):
                             split_length = fileLengths[FileNum] - split_offset
                         # set length
                         TxBuffer = bytearray(CMD_SET_LENGTH[:8])
-                        TxBuffer += split_length.to_bytes(2, byteorder='little')
+                        TxBuffer += split_length.to_bytes(2,
+                                                          byteorder='little')
                         try:
-                            RxBuffer, sw1, sw2 = card.connection.transmit(list(TxBuffer))
+                            RxBuffer, sw1, sw2 = card.connection.transmit(
+                                list(TxBuffer))
                         except CardServiceStoppedException as e:
                             print(f"Error sending the SET_LENGTH command: {e}")
-                            
+
                         # select file
                         one = 1
                         TxBuffer = bytearray(CMD_SELECT_FILE[:5])
                         TxBuffer += FileNum.to_bytes(2, byteorder='little')
                         TxBuffer += one.to_bytes(2, byteorder='little')
-                        TxBuffer += split_offset.to_bytes(2, byteorder='little')
-                        TxBuffer += split_length.to_bytes(2, byteorder='little')
+                        TxBuffer += split_offset.to_bytes(2,
+                                                          byteorder='little')
+                        TxBuffer += split_length.to_bytes(2,
+                                                          byteorder='little')
                         try:
-                            RxBuffer, sw1, sw2 = card.connection.transmit(list(TxBuffer))
+                            RxBuffer, sw1, sw2 = card.connection.transmit(
+                                list(TxBuffer))
                         except CardServiceStoppedException as e:
-                            print(f"Error sending the SELECT_FILE command: {e}")
-                            
+                            print(
+                                f"Error sending the SELECT_FILE command: {e}")
+
                         # get RxBuffer
                         TxBuffer = bytearray(CMD_GET_DATA[:4])
-                        TxBuffer += split_length.to_bytes(1, byteorder='little')
+                        TxBuffer += split_length.to_bytes(1,
+                                                          byteorder='little')
                         try:
-                            RxBuffer, sw1, sw2 = card.connection.transmit(list(TxBuffer))
+                            RxBuffer, sw1, sw2 = card.connection.transmit(
+                                list(TxBuffer))
                         except CardServiceStoppedException as e:
                             print(f"Error sending the GET_DATA command: {e}")
                         RxBuffer = bytes(RxBuffer)
@@ -113,15 +129,17 @@ class transmitobserver(CardObserver):
                                 out2file.write(RxBuffer[3:3+4000])
                             else:
                                 out2file.write(RxBuffer[:4000])
-                                
+
                         # Write RxBuffer to txt file
                         if FileNum == 1 and split_offset == 0:
                             jpn1 = open("jpn1.json", "w+")
                             name = toASCIIString(list(RxBuffer)[3:3+40])
-                           
+
                         elif FileNum == 1 and split_offset == 252:
-                            DOB = DateString(list(TxBuffer), list(RxBuffer)[295-252:295-252+4])
-                            ValidityDate = DateString(list(TxBuffer), list(RxBuffer)[324-252:324-252+4])
+                            DOB = DateString(list(TxBuffer), list(
+                                RxBuffer)[295-252:295-252+4])
+                            ValidityDate = DateString(
+                                list(TxBuffer), list(RxBuffer)[324-252:324-252+4])
                             jpn1_dict = {
                                 "name": name,
                                 "ic": toASCIIString(list(RxBuffer)[273-252:273-252+13]),
@@ -137,7 +155,7 @@ class transmitobserver(CardObserver):
                             json_object = json.dumps(jpn1_dict, indent=4)
                             jpn1.write(json_object)
                             jpn1.close()
-                            
+
                         elif FileNum == 4 and split_offset == 0:
                             jpn4 = open("jpn4.json", "w+")
                             postcode = PostcodeString(list(RxBuffer)[93:93+3])
@@ -147,13 +165,13 @@ class transmitobserver(CardObserver):
                                 "line3": toASCIIString(list(RxBuffer)[63:63+30]),
                                 "postcode": postcode,
                                 "line5": toASCIIString(list(RxBuffer)[96:96+25]),
-                                "line6": toASCIIString(list(RxBuffer)[121:121+30]), 
+                                "line6": toASCIIString(list(RxBuffer)[121:121+30]),
                                 "line7": toASCIIString(list(RxBuffer)[151:151+30])
-                                        }
+                            }
                             json_object = json.dumps(jpn4_dict, indent=4)
                             jpn4.write(json_object)
                             jpn4.close()
-                                 
+
                     print("\nDone reading\n")
                     if FileNum == 2:
                         out2file.close()
@@ -162,7 +180,8 @@ class transmitobserver(CardObserver):
             print("-Removed: ", toHexString(card.atr))
             if card in self.cards:
                 self.cards.remove(card)
-            
+
+
 if __name__ == '__main__':
     try:
         print("Insert or remove a SIM card in the system.")

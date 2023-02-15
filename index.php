@@ -2,7 +2,7 @@
 <img src="photo.jpg">
 <br><br>
 <?php
-// read a json file
+// read jpn.json file
 $json = file_get_contents('jpn1.json');
 // decode the json
 $json_data = json_decode($json, true);
@@ -28,6 +28,8 @@ echo $json_data['ethnicrace'];
 echo "<br>";
 echo $json_data['religion'];
 echo "<br>";
+
+// read jpn2.json file
 $json = file_get_contents('jpn4.json');
 $json_data = json_decode($json, true);
 echo $json_data['line1'];
