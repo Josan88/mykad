@@ -1,7 +1,7 @@
 # MyKAD
 This program uses [pyscard](https://pyscard.sourceforge.io/) for adding smart cards support to Python.
 ## Installation
-pip install smartcard
+pip install pyscard
 ## Usage
 This program sends apdu commands to mykad to obtain data from mykad. [Different apdu command](http://forum.lowyat.net/index.php?showtopic=355950&view=findpost&p=11151482) is needed to read different jpn files. The info read is then stored in json files.
 
