@@ -141,17 +141,6 @@ class transmitobserver(CardObserver):
                             jpn1.write(json_object)
                             jpn1.close()
                             
-                        elif FileNum == 3:
-                            # Thumbprint data
-                            if split_offset == 0:
-                                jpn3 = open("jpn3", "wb+")
-                                rightThumbData = (RxBuffer[23:23+598])
-                                print(toHexString(list(rightThumbData)))
-                                jpn3.write(rightThumbData)
-                            
-                            
-                            
-                            
                         elif FileNum == 4 and split_offset == 0:
                             jpn4 = open("jpn4.json", "w+")
                             postcode = PostcodeString(list(RxBuffer)[93:93+3])
@@ -172,8 +161,6 @@ class transmitobserver(CardObserver):
                     # outfile.close()
                     if FileNum == 2:
                         out2file.close()
-                    elif FileNum == 3:
-                        jpn3.close()
 
         for card in removedcards:
             print("-Removed: ", toHexString(card.atr))
