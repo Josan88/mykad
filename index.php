@@ -1,6 +1,3 @@
-<?php
- fopen("", access_mode);
-?>
 <html>
 <img src="photo.jpg">
 <br><br>
