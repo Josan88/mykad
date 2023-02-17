@@ -17,11 +17,11 @@ This program sends apdu commands to mykad to obtain data from mykad. [Different 
 
 ![image](https://user-images.githubusercontent.com/124897328/219552775-2b01736c-c44c-4110-b2b6-85a730048fcf.png)
 4. The program is started in the background (mykad.exe).
-4. The script will automatically detect the insertion of the card, select the JPN application, and read data from various files, including the user's photograph.
-5. After reading, data is stored in 2 json file. 
-6. The user's photograph will be saved as a JPEG file named "photo.jpg" in the current directory.
-7. View data in index.php.
-8. If user want to read another myKAD, remove the inserted card and insert another myKAD.
+5. The script will automatically detect the insertion of the card, select the JPN application, and read data from various files, including the user's photograph.
+6. After reading, data is stored in 2 json file. 
+7. The user's photograph will be saved as a JPEG file named "photo.jpg" in the current directory.
+8. View data in index.php.
+9. If user want to read another myKAD, remove the inserted card and insert another myKAD.
 
 
 
