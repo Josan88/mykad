@@ -11,14 +11,15 @@ To use this code, you will need the following:
 This program sends apdu commands to mykad to obtain data from mykad. [Different apdu command](http://forum.lowyat.net/index.php?showtopic=355950&view=findpost&p=11151482) is needed to read different jpn files. The info read is then stored in json files.
 
 ## Steps
-1. Insert a MyKad into the smart card reader.
-2. Run mykad.exe.
-3. The script will automatically detect the insertion of the card, select the JPN application, and read data from various files, including the user's photograph.
+1. Extract the zip file.
+2. Insert a MyKad into the smart card reader.
+3. Run mykad.exe.
+4. The script will automatically detect the insertion of the card, select the JPN application, and read data from various files, including the user's photograph.
 ![image](https://user-images.githubusercontent.com/124897328/219326018-d3dce885-7af8-46cb-afe7-f0e479830735.png)
-4. After reading, data is stored in 2 json file. 
-5. The user's photograph will be saved as a JPEG file named "photo.jpg" in the current directory.
-6. View data in index.php.
-7. If user want to read another myKAD, remove the inserted card and insert another myKAD.
+5. After reading, data is stored in 2 json file. 
+6. The user's photograph will be saved as a JPEG file named "photo.jpg" in the current directory.
+7. View data in index.php.
+8. If user want to read another myKAD, remove the inserted card and insert another myKAD.
 
 
 
