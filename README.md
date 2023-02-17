@@ -22,7 +22,7 @@ This program sends apdu commands to mykad to obtain data from mykad. [Different 
 6. After reading, data is stored in 2 json file. 
 7. The user's photograph will be saved as a JPEG file named "photo.jpg" in the current directory.
 8. View data in index.php.
-9. If user want to read another myKAD, remove the inserted card and insert another myKAD.
+9. If user wants to read another myKAD, remove the inserted card and insert another myKAD.
 
 
 
