@@ -13,7 +13,7 @@ This program sends apdu commands to mykad to obtain data from mykad. [Different 
 ## Steps
 1. Extract the zip file.
 2. Insert a MyKad into the smart card reader.
-3. Run mykad.exe.
+3. Run mykad.exe in /dist/.
 4. The script will automatically detect the insertion of the card, select the JPN application, and read data from various files, including the user's photograph.
 ![image](https://user-images.githubusercontent.com/124897328/219326018-d3dce885-7af8-46cb-afe7-f0e479830735.png)
 5. After reading, data is stored in 2 json file. 
